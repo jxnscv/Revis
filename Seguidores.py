@@ -1,40 +1,40 @@
-import json
-import pandas as pd
 import streamlit as st
+import json
 import requests
 
-# Función para cargar datos desde un archivo JSON en una URL
-def cargar_datos_instagram(url):
-    respuesta = requests.get(url)
-    if respuesta.status_code == 200:
-        return respuesta.json()
-    else:
-        st.error("Error al cargar los datos.")
-        return {}
+# Función para cargar datos desde una URL
+def load_data(url):
+    response = requests.get(url)
+    return json.loads(response.text)
 
-# Función para convertir los datos a un DataFrame
-def convertir_a_dataframe(datos):
-    # Asegúrate de que la estructura de datos sea correcta
-    seguidores = datos.get('followers', [])  # Lista de seguidores
-    siguiendo = datos.get('following', [])    # Lista de cuentas que sigues
-    
-    # Encontrar cuentas que no te siguen de vuelta
-    no_me_siguen = [usuario for usuario in siguiendo if usuario not in seguidores]
-    
-    # Crear un DataFrame
-    df = pd.DataFrame(no_me_siguen, columns=['Cuentas a dejar de seguir'])
-    return df
-
-# URL del archivo JSON
-url_archivo = 'https://raw.githubusercontent.com/jxnscv/Revis/main/debug_output.json'
+# URLs de los archivos JSON
+following_url = "https://raw.githubusercontent.com/jxnscv/Revis/main/following.json"
+followers_url = "https://raw.githubusercontent.com/jxnscv/Revis/main/followers_1.json"
 
 # Cargar los datos
-datos_instagram = cargar_datos_instagram(url_archivo)
+following_data = load_data(following_url)
+followers_data = load_data(followers_url)
 
-# Convertir a DataFrame
-df = convertir_a_dataframe(datos_instagram)
+# Convertir las listas de nombres a conjuntos
+following_set = set(following_data)
+followers_set = set(followers_data)
 
-# Mostrar el DataFrame en Streamlit
-st.title("Análisis de Seguidores de Instagram")
-st.write("Cuentas a las que deberías dejar de seguir porque no te siguen:")
-st.write(df)
+# Encontrar nombres que faltan en cada conjunto
+faltan_en_following = followers_set - following_set
+faltan_en_followers = following_set - followers_set
+
+# Título de la aplicación
+st.title("Comparación de Following y Followers")
+
+# Mostrar resultados
+st.subheader("Nombres que faltan en 'following':")
+if faltan_en_following:
+    st.write(", ".join(faltan_en_following))
+else:
+    st.write("No faltan nombres en 'following'.")
+
+st.subheader("Nombres que faltan en 'followers':")
+if faltan_en_followers:
+    st.write(", ".join(faltan_en_followers))
+else:
+    st.write("No faltan nombres en 'followers'.")
