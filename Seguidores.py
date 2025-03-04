@@ -14,6 +14,7 @@ def cargar_datos_instagram(url):
 
 # Función para convertir los datos a un DataFrame
 def convertir_a_dataframe(datos):
+    # Asegúrate de que la estructura de datos sea correcta
     seguidores = datos.get('followers', [])  # Cambia 'followers' según la estructura de tu JSON
     siguiendo = datos.get('following', [])    # Cambia 'following' según la estructura de tu JSON
     
