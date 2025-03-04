@@ -15,9 +15,16 @@ followers_url = "https://raw.githubusercontent.com/jxnscv/Revis/main/followers_1
 following_data = load_data(following_url)
 followers_data = load_data(followers_url)
 
-# Convertir las listas de nombres a conjuntos
-following_set = set(following_data)
-followers_set = set(followers_data)
+# Asegurarse de que los datos son listas de nombres
+if isinstance(following_data, list):
+    following_set = set(following_data)
+else:
+    st.error("El archivo 'following.json' no contiene una lista de nombres.")
+
+if isinstance(followers_data, list):
+    followers_set = set(followers_data)
+else:
+    st.error("El archivo 'followers_1.json' no contiene una lista de nombres.")
 
 # Encontrar nombres que faltan en cada conjunto
 faltan_en_following = followers_set - following_set
