@@ -15,8 +15,8 @@ def cargar_datos_instagram(url):
 # Función para convertir los datos a un DataFrame
 def convertir_a_dataframe(datos):
     # Asegúrate de que la estructura de datos sea correcta
-    seguidores = datos.get('followers', [])  # Cambia 'followers' según la estructura de tu JSON
-    siguiendo = datos.get('following', [])    # Cambia 'following' según la estructura de tu JSON
+    seguidores = datos.get('followers', [])  # Lista de seguidores
+    siguiendo = datos.get('following', [])    # Lista de cuentas que sigues
     
     # Encontrar cuentas que no te siguen de vuelta
     no_me_siguen = [usuario for usuario in siguiendo if usuario not in seguidores]
